@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Jerlyn O'Donnell — Experience Design Director, Author, Illustrator. Accessibility-first design consultancy. Awwwards Site of the Day. CPACC certified. Adobe Community Expert.">
+<title>JERLYN©2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #020C28;
+    --text: #FFFFFF;
+    --muted: rgba(255,255,255,0.4);
+    --border: rgba(120,120,255,0.1);
+    --pink: #DE6399;
+    --teal: #4ADEDE;
+    --purple: #36069A;
+    --card-bg: #0a1535;
+    --display: 'Syne', sans-serif;
+    --body: 'Space Grotesk', sans-serif;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-theme="light"] {
+    --bg: #F8F9FA;
+    --text: #020C28;
+    --muted: #545C6B;  /* ~5.8:1 on #F8F9FA, passes WCAG AA */
+    --border: rgba(2,12,40,0.08);
+    --card-bg: #EAECF0;
+    --teal: #0A6B6B;   /* 5.9:1 on #F8F9FA, passes WCAG AA */
+    --pink: #A01C5A;   /* 7.5:1 on #F8F9FA, passes WCAG AA */
+  }
+
+  [data-theme="light"] .hero-bio,
+  [data-theme="light"] .vibecode-intro,
+  [data-theme="light"] .service-desc,
+  [data-theme="light"] .vibe-desc,
+  [data-theme="light"] .case-desc {
+    font-weight: 400;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    transition: background 0.3s var(--ease), color 0.3s var(--ease);
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 2.5rem;
+    font-family: var(--body); font-size: 0.75rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s var(--ease);
+  }
+  .nav-logo { font-family: var(--display); font-weight: 800; font-size: 0.85rem; letter-spacing: 0.1em; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; list-style: none; }
+  .nav-links a { opacity: 0.5; transition: opacity 0.2s; }
+  .nav-links a:hover { opacity: 1; }
+  .nav-toggles { display: flex; gap: 1.25rem; align-items: center; }
+  .toggle-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.18); color: var(--text);
+    font-family: var(--body); font-size: 0.7rem; letter-spacing: 0.08em;
+    padding: 0.3rem 0.6rem; cursor: pointer; text-transform: uppercase;
+    transition: border-color 0.2s;
+  }
+  .toggle-btn:hover { border-color: var(--teal); }
+  .clock { font-size: 0.7rem; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 0 2.5rem 4.5rem;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-video-wrap {
+    position: absolute; inset: 0; z-index: 0;
+  }
+
+  .hero-video {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* Gradient: lighter at top (nav visible), heavier at bottom (text readable).
+     Worst-case video frame is pure white. rgba(2,12,40,0.82) on white →
+     ~rgb(46,51,62), luminance ≈0.032. White text on that = 17:1. Passes AAA. */
+  .hero-video-overlay {
+    position: absolute; inset: 0;
+    background:
+      /* bottom text zone: dark veil keeps white text at 7:1+ on worst-case frame */
+      linear-gradient(to top,
+        rgba(2,12,40,0.92) 0%,
+        rgba(2,12,40,0.55) 45%,
+        transparent 70%
+      ),
+      /* brand color wash — purple left, pink right, matching designlady.com aesthetic */
+      linear-gradient(135deg,
+        rgba(54,6,154,0.68) 0%,
+        rgba(222,99,153,0.60) 100%
+      );
+  }
+
+  .hero > *:not(.hero-video-wrap):not(.video-pause-btn) { position: relative; z-index: 1; }
+
+  /* Hero sits over a dark colored overlay at all times — white text regardless of theme */
+  .hero { color: #FFFFFF; }
+  .hero .hero-eyebrow { color: rgba(255,255,255,0.55); }
+  .hero .hero-bio { color: rgba(255,255,255,0.68); }
+  .hero .hero-tags { color: rgba(255,255,255,0.38); }
+  .hero .hero-badge { color: #4ADEDE; border-color: rgba(74,222,222,0.4); }
+  .hero .hero-badge-dot { background: #4ADEDE; }
+  .hero .hero-bio strong { color: #4ADEDE; }
+
+  .video-pause-btn {
+    position: absolute; bottom: 1.5rem; right: 2.5rem; z-index: 2;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+    color: #fff; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.35rem 0.65rem; cursor: pointer; font-family: var(--body);
+    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  }
+  .video-pause-btn:hover { background: rgba(255,255,255,0.18); border-color: var(--teal); }
+  .video-pause-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+    border: 1px solid rgba(74,222,222,0.35); color: var(--teal);
+    padding: 0.3rem 0.75rem; margin-bottom: 1.75rem; width: fit-content;
+  }
+  .hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+  .hero-eyebrow {
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.75rem; font-weight: 500;
+  }
+  .hero-headline {
+    font-family: var(--display); font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 800; line-height: 0.95; letter-spacing: -0.03em;
+    margin-bottom: 2.75rem; max-width: 18ch;
+  }
+  .hero-headline .accent { color: var(--pink); font-weight: 400; font-style: italic; }
+  .hero-sub { display: flex; align-items: flex-start; gap: 4rem; max-width: 60rem; }
+  .hero-bio { font-size: 1rem; line-height: 1.75; color: var(--muted); max-width: 38ch; font-weight: 300; }
+  .hero-bio strong { color: var(--teal); font-weight: 500; }
+  .hero-tags {
+    display: flex; flex-direction: column; gap: 0.45rem;
+    color: var(--muted); font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; padding-top: 0.15rem; white-space: nowrap;
+  }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0 2.5rem; }
+
+  /* LOGO MARQUEE */
+  .marquee-wrap {
+    padding: 2.5rem 0; overflow: hidden;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .marquee-track {
+    display: flex; align-items: center; gap: 4rem; width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+  .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee-logo {
+    height: 20px; width: auto; opacity: 0.35;
+    filter: brightness(10) saturate(0);
+    flex-shrink: 0; transition: opacity 0.2s;
+  }
+  .marquee-wrap:hover .marquee-logo { opacity: 0.6; }
+  [data-theme="light"] .marquee-logo { filter: brightness(0) saturate(0); }
+
+  /* STATEMENT */
+  .statement { padding: 5rem 2.5rem; }
+  .statement-text {
+    font-family: var(--display); font-size: clamp(2rem, 5vw, 5rem);
+    font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .statement-text .accent { color: var(--teal); }
+  .statement-text .dim { opacity: 0.12; }
+
+  /* Light mode: dim words ("and", "Let's") swap to accessible gray — #545C6B = 5.8:1 on #F8F9FA */
+  [data-theme="light"] .statement-text .dim,
+  [data-theme="light"] .cta-word-stack .line-dim { color: var(--muted); opacity: 1; }
+
+  /* CASE STUDIES */
+  .casestudies { padding: 5rem 2.5rem; }
+  .section-label {
+    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 3rem; font-weight: 500;
+  }
+  .case-list { list-style: none; border-top: 1px solid var(--border); }
+  .case-item {
+    display: grid; grid-template-columns: 7.5rem 1fr 12rem auto;
+    align-items: center; gap: 1.5rem; padding: 1.75rem 0;
+    border-bottom: 1px solid var(--border); color: var(--text);
+    transition: padding-left 0.3s var(--ease);
+  }
+  .case-item:hover { padding-left: 1rem; }
+  .case-item:hover .case-name { color: var(--pink); }
+  .case-tag {
+    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.15); padding: 0.2rem 0.5rem;
+    color: var(--muted); font-weight: 500; white-space: nowrap; display: inline-block;
+  }
+  .case-name {
+    font-family: var(--display); font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+    font-weight: 700; letter-spacing: -0.02em; transition: color 0.25s;
+  }
+  .case-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .case-arrow {
+    font-size: 1rem; color: var(--teal); opacity: 0;
+    transform: translateX(-0.5rem); transition: opacity 0.2s, transform 0.3s var(--ease);
+    text-align: right;
+  }
+  .case-item:hover .case-arrow { opacity: 1; transform: translateX(0); }
+
+  /* SERVICES */
+  .services { padding: 5rem 2.5rem; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--border); border-left: 1px solid var(--border);
+  }
+  .service-cell {
+    padding: 2rem 2rem 2.5rem;
+    border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+  }
+  .service-num {
+    font-size: 0.65rem; letter-spacing: 0.12em; color: var(--teal);
+    text-transform: uppercase; font-weight: 600; margin-bottom: 1rem;
+  }
+  .service-name {
+    font-family: var(--display); font-size: 1.1rem;
+    font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.6rem; line-height: 1.2;
+  }
+  .service-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+  /* VIBE CODE */
+  .vibecode { padding: 5rem 2.5rem; }
+  .vibecode-intro {
+    max-width: 48ch; font-size: 0.95rem; line-height: 1.75;
+    color: var(--muted); font-weight: 300; margin-bottom: 3.5rem;
+  }
+  .vibecode-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px; background: var(--border);
+  }
+  .vibe-card {
+    background: var(--bg); display: flex; flex-direction: column;
+    transition: background 0.25s; color: var(--text); position: relative;
+  }
+  .vibe-card:hover { background: var(--card-bg); }
+  .vibe-thumb {
+    width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top;
+    display: block; filter: saturate(0.75) brightness(0.8); transition: filter 0.3s;
+  }
+  .vibe-card:hover .vibe-thumb { filter: saturate(1) brightness(1); }
+  .vibe-overlay {
+    position: absolute; top: 0; left: 0; right: 0; aspect-ratio: 16/10;
+    display: flex; align-items: center; justify-content: center; pointer-events: none;
+    transition: background 0.25s;
+  }
+  .vibe-card:hover .vibe-overlay { background: rgba(74,222,222,0.06); }
+  .vibe-overlay-label {
+    font-family: var(--display); font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal);
+    opacity: 0; transform: translateY(0.4rem);
+    transition: opacity 0.2s, transform 0.25s var(--ease);
+  }
+  .vibe-card:hover .vibe-overlay-label { opacity: 1; transform: translateY(0); }
+  .vibe-info { padding: 1rem 1.25rem 1.35rem; }
+  .vibe-category {
+    font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin-bottom: 0.3rem;
+  }
+  .vibe-name { font-family: var(--display); font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 0.35rem; }
+  .vibe-desc { font-size: 0.77rem; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+  /* THOUGHT LEADERSHIP */
+  .musings { padding: 5rem 2.5rem; }
+  .musing-list { list-style: none; border-top: 1px solid var(--border); }
+  .musing-item {
+    display: grid; grid-template-columns: 7rem 1fr auto;
+    align-items: baseline; gap: 1.5rem; padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border); color: var(--text);
+    transition: padding-left 0.3s var(--ease);
+  }
+  .musing-item:hover { padding-left: 1rem; }
+  .musing-item:hover .musing-title { color: var(--pink); }
+  .musing-date { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+  .musing-title {
+    font-family: var(--display); font-size: clamp(0.95rem, 2vw, 1.25rem);
+    font-weight: 700; letter-spacing: -0.01em; transition: color 0.25s; line-height: 1.3;
+  }
+  .musing-arrow { font-size: 0.9rem; color: var(--teal); opacity: 0; transform: translateX(-0.4rem); transition: opacity 0.2s, transform 0.3s var(--ease); }
+  .musing-item:hover .musing-arrow { opacity: 1; transform: translateX(0); }
+  .musings-more {
+    display: inline-block; margin-top: 2.5rem; font-size: 0.75rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal);
+    border-bottom: 1px solid rgba(74,222,222,0.4); padding-bottom: 0.1rem;
+    transition: opacity 0.2s;
+  }
+  .musings-more:hover { opacity: 0.6; }
+
+  /* CTA */
+  .cta-section { padding: 8rem 2.5rem; border-top: 1px solid var(--border); }
+  .cta-word-stack {
+    font-family: var(--display); font-size: clamp(4rem, 10vw, 12rem);
+    font-weight: 800; line-height: 0.9; letter-spacing: -0.04em;
+  }
+  .cta-word-stack .line-dim { opacity: 0.07; }
+  .cta-word-stack .line-pink { color: var(--pink); }
+  .cta-word-stack .line-teal { color: var(--teal); }
+  .cta-contact { margin-top: 3rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+  .cta-email {
+    font-size: 1rem; border-bottom: 1px solid var(--teal);
+    padding-bottom: 0.1rem; color: var(--teal); transition: opacity 0.2s;
+  }
+  .cta-email:hover { opacity: 0.6; }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); border-top: 1px solid var(--border); flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-links { display: flex; gap: 2rem; list-style: none; }
+  .footer-links a { transition: opacity 0.2s; }
+  .footer-links a:hover { opacity: 0.5; }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(1.75rem); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .marquee-track { animation: none; }
+  }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .case-item { grid-template-columns: 6rem 1fr; grid-template-rows: auto auto; }
+    .case-desc, .case-arrow { display: none; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hero, .statement, .casestudies, .services, .vibecode, .musings, .cta-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .divider { margin: 0 1.25rem; }
+    footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
+    .hero-sub { flex-direction: column; gap: 2rem; }
+    .hero-tags { display: none; }
+    .services-grid { grid-template-columns: 1fr; }
+    .vibecode-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .vibecode-grid { grid-template-columns: 1fr; }
+  }
+
+  /* CURSOR GLOW */
+  .cursor-glow {
+    position: fixed; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(54,6,154,0.09) 0%, transparent 65%);
+    border-radius: 50%; pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: left 0.7s var(--ease), top 0.7s var(--ease);
+    z-index: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav role="navigation" aria-label="Main navigation">
+  <span class="nav-logo">DESIGN LADY LLC©2026</span>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#vibecode">Vibe Code</a></li>
+    <li><a href="#musings">Musings</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-toggles">
+    <button class="toggle-btn" id="themeToggle" aria-label="Toggle color theme" aria-pressed="false">THEME<span id="themeLabel">[D]</span></button>
+    <span class="clock" id="clock" aria-live="polite">--:-- EST NY</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-headline">
+
+  <div class="hero-video-wrap">
+    <video class="hero-video" id="heroBgVideo" autoplay muted loop playsinline aria-hidden="true">
+      <source src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd73f33938d7c71c874b81_designlady-transcode.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay" aria-hidden="true"></div>
+  </div>
+
+  <button class="video-pause-btn" id="videoPauseBtn" aria-label="Pause background video" aria-pressed="false">⏸ Pause</button>
+  <div class="hero-badge" role="note" aria-label="CPACC Certified, one of fewer than 10,000 globally">
+    <span class="hero-badge-dot" aria-hidden="true"></span>
+    CPACC Certified &mdash; 1 of fewer than 10,000 globally
+  </div>
+  <p class="hero-eyebrow">Experience Design · Accessibility · Strategy</p>
+  <h1 class="hero-headline" id="hero-headline">
+    Design that<br>
+    doesn't leave<br>
+    anyone <span class="accent">behind.</span>
+  </h1>
+  <div class="hero-sub">
+    <p class="hero-bio">
+      I'm Jerlyn, an <strong>Experience Design Director</strong>, author, and illustrator based in the Bronx. Founder of <strong>Design Lady LLC</strong>. CPACC certified (1 of fewer than 10,000 globally). Adobe Community Expert. I build accessibility in from day one.
+    </p>
+    <div class="hero-tags" aria-hidden="true">
+      <span>IAAP CPACC</span>
+      <span>Adobe ACE</span>
+      <span>WCAG 2.2</span>
+      <span>Design Systems</span>
+      <span>AI Strategy</span>
+      <span>#genAI365</span>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO MARQUEE -->
+<div class="marquee-wrap" aria-label="Client roster: Heineken, Bank of America, Nike, Sensodyne, Pfizer, Cartier, LG, AstraZeneca, Sanofi, AbbVie, Bristol-Myers Squibb, Astellas, Vice, Barnes and Noble, Akebia" role="region">
+  <div class="marquee-track" aria-hidden="true">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd4ba38c15e0a1f2eaa869_heineken.svg" alt="Heineken">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd506b1bc51ec99c8f5a1d_boa.svg" alt="Bank of America">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd559311a327c280d80c75_Nike.svg" alt="Nike">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd536d11a327c280d7e367_sensodyne.svg" alt="Sensodyne">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd52f072236be6076beba6_Pfizer.svg" alt="Pfizer">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd59941b40e3cc39f29ca5_Cartier.svg" alt="Cartier">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd5030881af38c36c7d4bb_LG-Logo.svg" alt="LG">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd57ecc39e0e661cb5bd7c_astrazeneca.svg" alt="AstraZeneca">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd54fe68e43bb56dfaac83_sanofi.svg" alt="Sanofi">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd53f74c875a9156a853b4_AbbVie_logo.svg" alt="AbbVie">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd58eed884b182c5eb98a8_Bristol-Myers_Squibb.svg" alt="Bristol-Myers Squibb">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd532f50c65a6422d4b1de_Astellas_logo.svg" alt="Astellas">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd56aa7cceddc21199ef11_Vice.svg" alt="Vice">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd5702439cab3e0a980eec_Barnes_and_Noble.svg" alt="Barnes and Noble">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd526862d33e7dbd10d946_Akebia.svg" alt="Akebia">
+    <!-- duplicate for seamless loop -->
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd4ba38c15e0a1f2eaa869_heineken.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd506b1bc51ec99c8f5a1d_boa.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd559311a327c280d80c75_Nike.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd536d11a327c280d7e367_sensodyne.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd52f072236be6076beba6_Pfizer.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd59941b40e3cc39f29ca5_Cartier.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd5030881af38c36c7d4bb_LG-Logo.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd57ecc39e0e661cb5bd7c_astrazeneca.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd54fe68e43bb56dfaac83_sanofi.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd53f74c875a9156a853b4_AbbVie_logo.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd58eed884b182c5eb98a8_Bristol-Myers_Squibb.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd532f50c65a6422d4b1de_Astellas_logo.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd56aa7cceddc21199ef11_Vice.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd5702439cab3e0a980eec_Barnes_and_Noble.svg" alt="">
+    <img class="marquee-logo" src="https://cdn.prod.website-files.com/68fd31058a3947827c8f42e7/68fd526862d33e7dbd10d946_Akebia.svg" alt="">
+  </div>
+</div>
+
+<!-- STATEMENT -->
+<div class="statement">
+  <p class="statement-text reveal" aria-label="I bring equity and craft to digital work.">
+    I bring <span class="accent">equity</span><br>
+    <span class="dim">and</span> craft<br>
+    to digital work.
+  </p>
+</div>
+
+<hr class="divider" aria-hidden="true">
+
+<!-- CASE STUDIES -->
+<section class="casestudies" id="work" aria-labelledby="work-label">
+  <p class="section-label" id="work-label">Case Studies</p>
+  <ul class="case-list">
+
+    <li>
+      <a class="case-item reveal" href="https://designlady.com/works/blaxploitation" target="_blank" rel="noopener noreferrer" aria-label="Blaxploitation case study on designlady.com">
+        <span class="case-tag">Brand + UX</span>
+        <span class="case-name">Blaxploitation</span>
+        <span class="case-desc">Cultural identity and experience design for a genre-defining brand.</span>
+        <span class="case-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="case-item reveal reveal-delay-1" href="https://designlady.com/works/lge" target="_blank" rel="noopener noreferrer" aria-label="LG Electronics case study on designlady.com">
+        <span class="case-tag">Enterprise UX</span>
+        <span class="case-name">LG Electronics</span>
+        <span class="case-desc">Accessible digital ecosystem design for a global consumer electronics brand.</span>
+        <span class="case-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="case-item reveal reveal-delay-2" href="https://designlady.com/works/sensodyne" target="_blank" rel="noopener noreferrer" aria-label="Sensodyne case study on designlady.com">
+        <span class="case-tag">Pharma</span>
+        <span class="case-name">Sensodyne</span>
+        <span class="case-desc">WCAG-compliant HCP and DTC experience design for a global oral health brand.</span>
+        <span class="case-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="case-item reveal reveal-delay-3" href="https://designlady.com/works/heineken" target="_blank" rel="noopener noreferrer" aria-label="Heineken case study on designlady.com">
+        <span class="case-tag">CPG</span>
+        <span class="case-name">Heineken</span>
+        <span class="case-desc">Experience design and accessibility strategy for an iconic global beverage brand.</span>
+        <span class="case-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="case-item reveal reveal-delay-4" href="https://designlady.com/works/health-portfolio" target="_blank" rel="noopener noreferrer" aria-label="Health Portfolio case study on designlady.com">
+        <span class="case-tag">Healthcare</span>
+        <span class="case-name">Health Portfolio</span>
+        <span class="case-desc">Pharma and biotech UX across Pfizer, AbbVie, AstraZeneca, BMS, Sanofi, and Astellas.</span>
+        <span class="case-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+  </ul>
+</section>
+
+<hr class="divider" aria-hidden="true">
+
+<!-- SERVICES -->
+<section class="services" aria-labelledby="services-label">
+  <p class="section-label" id="services-label">Solutions</p>
+  <div class="services-grid" role="list">
+
+    <div class="service-cell reveal" role="listitem">
+      <p class="service-num">01</p>
+      <p class="service-name">Experience Design</p>
+      <p class="service-desc">User-centered design that prioritizes accessibility and usability from the first pixel.</p>
+    </div>
+
+    <div class="service-cell reveal reveal-delay-1" role="listitem">
+      <p class="service-num">02</p>
+      <p class="service-name">Accessibility Audits</p>
+      <p class="service-desc">Comprehensive WCAG AA/AAA compliance audits and remediation roadmaps. Built in, not bolted on.</p>
+    </div>
+
+    <div class="service-cell reveal reveal-delay-2" role="listitem">
+      <p class="service-num">03</p>
+      <p class="service-name">Design Systems</p>
+      <p class="service-desc">Component libraries, token architecture, and documentation that scale across enterprise teams.</p>
+    </div>
+
+    <div class="service-cell reveal" role="listitem">
+      <p class="service-num">04</p>
+      <p class="service-name">Illustration</p>
+      <p class="service-desc">Custom illustration and visual narrative work rooted in cultural sensitivity and inclusive storytelling.</p>
+    </div>
+
+    <div class="service-cell reveal reveal-delay-1" role="listitem">
+      <p class="service-num">05</p>
+      <p class="service-name">AI Integration</p>
+      <p class="service-desc">Practical AI strategy through #genAI365. I teach frameworks, not just tools.</p>
+    </div>
+
+    <div class="service-cell reveal reveal-delay-2" role="listitem">
+      <p class="service-num">06</p>
+      <p class="service-name">Workshops &amp; Training</p>
+      <p class="service-desc">Hands-on training in inclusive design, Figma, Adobe Enterprise, AI integration, and WCAG compliance.</p>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" aria-hidden="true">
+
+<!-- VIBE CODE -->
+<section class="vibecode" id="vibecode" aria-labelledby="vibecode-label">
+  <p class="section-label" id="vibecode-label">Vibe Code</p>
+  <p class="vibecode-intro reveal">
+    Projects shipped in under a day. UX principles applied at speed. Each one is proof that accessibility and delight are not a trade-off.
+  </p>
+  <div class="vibecode-grid" role="list">
+
+    <a class="vibe-card reveal" href="https://jerlyn.github.io/vibecode/ChatGPTPie.html" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="ChatGPT Usage Visualization — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/newplot.png" alt="Pie chart of ChatGPT use cases" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Data Viz</p>
+        <p class="vibe-name">ChatGPT Usage Patterns</p>
+        <p class="vibe-desc">What are people actually doing with ChatGPT?</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/vibecode/transcribe.html" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Natural Language Transcriber — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/transcribe.gif" alt="Real-time transcription demo" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">AI Tool</p>
+        <p class="vibe-name">Natural Language Transcriber</p>
+        <p class="vibe-desc">Real-time transcription with natural language processing.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/vibecode/comeback.html" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Comeback Generator — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/comeback.gif" alt="Comeback Generator demo" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">AI Tool</p>
+        <p class="vibe-name">Comeback Generator</p>
+        <p class="vibe-desc">Turn online negativity into witty, disarming responses.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/BadBoss/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Are You a Bad Boss — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/BadBoss.gif" alt="Boss personality type animation" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Leadership Tool</p>
+        <p class="vibe-name">Are You a Bad Boss?</p>
+        <p class="vibe-desc">Identify your leadership archetype. Get actionable tips to improve.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal" href="https://jerlyn.github.io/worldofai/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="AI with Charlie — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/charlie.png" alt="Charlie the AI guide character" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Book + Interactive</p>
+        <p class="vibe-name">AI with Charlie</p>
+        <p class="vibe-desc">Interactive companion to the children's book on AI concepts.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/polymath/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="The Polymath Quiz — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/polymath.png" alt="Polymath Quiz interface" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Assessment</p>
+        <p class="vibe-name">The Polymath Quiz</p>
+        <p class="vibe-desc">Do you span disciplines where others see walls? Find out.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/first-letter-friends/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="First Letter Friends — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/friends.png" alt="First Letter Friends game" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">A11y EdTech</p>
+        <p class="vibe-name">First Letter Friends</p>
+        <p class="vibe-desc">Animal alphabet game for toddlers, built accessibility-first.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/memory-match-abc/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Memory Match ABC — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/Memory.png" alt="Memory Match ABC game" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">A11y EdTech</p>
+        <p class="vibe-name">Memory Match ABC</p>
+        <p class="vibe-desc">Mobile-first letter and number recognition game for toddlers.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal" href="https://jerlyn.github.io/ChatGPTDeYellower/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="ChatGPT DeYellower — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/deyellow.png" alt="Before and after deyellowed image comparison" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Utility</p>
+        <p class="vibe-name">ChatGPT DeYellower</p>
+        <p class="vibe-desc">Strip the telltale yellow cast from AI-generated images. No install needed.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/Pacman/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Accessible Pac-Man — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/Pacman.gif" alt="Pac-Man game" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Accessible Game</p>
+        <p class="vibe-name">Pac-Man</p>
+        <p class="vibe-desc">Classic Pac-Man rebuilt with accessibility in mind.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/vaccine-wordle/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Vaccine Wordle — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/Worldle.png" alt="Vaccine Wordle game" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Health EdTech</p>
+        <p class="vibe-name">Vaccine Wordle</p>
+        <p class="vibe-desc">Wordle variant using vaccine terminology to build health literacy.</p>
+      </div>
+    </a>
+
+    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/GenAITetris/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="GenAI Tetris — view project">
+      <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/tetris.png" alt="Retro Tetris game" loading="lazy">
+      <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
+      <div class="vibe-info">
+        <p class="vibe-category">Game</p>
+        <p class="vibe-name">GenAI Tetris</p>
+        <p class="vibe-desc">A retro Tetris built with generative AI tooling.</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<hr class="divider" aria-hidden="true">
+
+<!-- THOUGHT LEADERSHIP -->
+<section class="musings" id="musings" aria-labelledby="musings-label">
+  <p class="section-label" id="musings-label">Thought Leadership</p>
+  <ul class="musing-list">
+
+    <li>
+      <a class="musing-item reveal" href="https://designlady.com/blogs/why-accessibility-is-the-only-constant" target="_blank" rel="noopener noreferrer" aria-label="Why Accessibility is the Only Constant in a Fragmented World — read on designlady.com">
+        <span class="musing-date">Jan 2026</span>
+        <span class="musing-title">Why Accessibility is the Only Constant in a Fragmented World</span>
+        <span class="musing-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="musing-item reveal reveal-delay-1" href="https://designlady.com/blogs/why-pharmcaceutical-brands-need-accessibility-first-design" target="_blank" rel="noopener noreferrer" aria-label="Why pharmaceutical brands need accessibility-first design — read on designlady.com">
+        <span class="musing-date">Dec 2025</span>
+        <span class="musing-title">Why Pharmaceutical Brands Need Accessibility-First Design</span>
+        <span class="musing-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+    <li>
+      <a class="musing-item reveal reveal-delay-2" href="https://designlady.com/blogs/inclusive-design" target="_blank" rel="noopener noreferrer" aria-label="Attaining Inclusive Design with Empathy — read on designlady.com">
+        <span class="musing-date">Nov 2024</span>
+        <span class="musing-title">Attaining Inclusive Design with Empathy</span>
+        <span class="musing-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+
+  </ul>
+  <a class="musings-more reveal" href="https://designlady.com/blog" target="_blank" rel="noopener noreferrer">All posts on designlady.com →</a>
+</section>
+
+<hr class="divider" aria-hidden="true">
+
+<!-- CTA -->
+<section class="cta-section" id="contact" aria-labelledby="cta-heading">
+  <div class="cta-word-stack reveal" id="cta-heading">
+    <div class="line-dim">Let's</div>
+    <div>Build</div>
+    <div class="line-pink">Something</div>
+    <div class="line-teal">Accessible.</div>
+  </div>
+  <div class="cta-contact reveal reveal-delay-2">
+    <a class="cta-email" href="mailto:jerlyn@designlady.com" aria-label="Email Jerlyn at Design Lady LLC">jerlyn@designlady.com</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>JERLYN O'DONNELL · DESIGN LADY LLC · BRONX, NY</span>
+  <ul class="footer-links" aria-label="Social links">
+    <li><a href="https://linkedin.com/in/jerlyn" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+    <li><a href="https://github.com/Jerlyn" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    <li><a href="https://www.instagram.com/designladyllc" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+    <li><a href="https://www.behance.net/JerlynThomas" target="_blank" rel="noopener noreferrer">Behance</a></li>
+    <li><a href="https://www.youtube.com/@Designlady" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+    <li><a href="http://www.designlady.com" target="_blank" rel="noopener noreferrer">designlady.com</a></li>
+  </ul>
+</footer>
+
+<script>
+  // VIDEO PAUSE TOGGLE (WCAG 2.2.2)
+  const video = document.getElementById('heroBgVideo');
+  const pauseBtn = document.getElementById('videoPauseBtn');
+  if (video && pauseBtn) {
+    pauseBtn.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        pauseBtn.textContent = '⏸ Pause';
+        pauseBtn.setAttribute('aria-label', 'Pause background video');
+        pauseBtn.setAttribute('aria-pressed', 'false');
+      } else {
+        video.pause();
+        pauseBtn.textContent = '▶ Play';
+        pauseBtn.setAttribute('aria-label', 'Play background video');
+        pauseBtn.setAttribute('aria-pressed', 'true');
+      }
+    });
+  }
+
+  // Respect prefers-reduced-motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && video) {
+    video.pause();
+    if (pauseBtn) { pauseBtn.textContent = '▶ Play'; pauseBtn.setAttribute('aria-pressed', 'true'); }
+  }
+  function tick() {
+    const t = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York' }).format(new Date());
+    document.getElementById('clock').textContent = t + ' EST NY';
+  }
+  tick(); setInterval(tick, 1000);
+
+  // THEME TOGGLE
+  const themeBtn = document.getElementById('themeToggle');
+  let isDark = true;
+  themeBtn.addEventListener('click', () => {
+    isDark = !isDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeLabel').textContent = isDark ? '[D]' : '[L]';
+    themeBtn.setAttribute('aria-pressed', String(!isDark));
+  });
+
+  // CURSOR GLOW
+  if (window.matchMedia('(pointer: fine)').matches) {
+    const g = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', e => { g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px'; });
+  } else {
+    document.getElementById('cursorGlow').style.display = 'none';
+  }
+
+  // SCROLL REVEAL
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // HERO ENTRANCE
+  window.addEventListener('load', () => {
+    ['.hero-badge', '.hero-eyebrow', '.hero-headline', '.hero-sub'].forEach((sel, i) => {
+      const el = document.querySelector(sel);
+      if (!el) return;
+      el.style.cssText = `opacity:0;transform:translateY(1.5rem);transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${i*0.13}s,transform 0.9s cubic-bezier(0.22,1,0.36,1) ${i*0.13}s`;
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = ''; el.style.transform = ''; }));
+    });
+  });
+</script>
+</body>
+</html>
