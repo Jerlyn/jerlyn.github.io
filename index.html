@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Jerlyn O'Donnell — Experience Design Director, Author, Illustrator. Accessibility-first design consultancy. Awwwards Site of the Day. CPACC certified. Adobe Community Expert.">
 <title>JERLYN©2026</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9ZGP8C506G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-9ZGP8C506G');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -813,6 +822,11 @@
 </footer>
 
 <script>
+  // GA4 HELPER — safe wrapper if gtag hasn't loaded yet
+  function track(event, params) {
+    if (typeof gtag === 'function') gtag('event', event, params);
+  }
+
   // VIDEO PAUSE TOGGLE (WCAG 2.2.2)
   const video = document.getElementById('heroBgVideo');
   const pauseBtn = document.getElementById('videoPauseBtn');
@@ -823,20 +837,25 @@
         pauseBtn.textContent = '⏸ Pause';
         pauseBtn.setAttribute('aria-label', 'Pause background video');
         pauseBtn.setAttribute('aria-pressed', 'false');
+        track('video_control', { action: 'play', label: 'hero_background_video' });
       } else {
         video.pause();
         pauseBtn.textContent = '▶ Play';
         pauseBtn.setAttribute('aria-label', 'Play background video');
         pauseBtn.setAttribute('aria-pressed', 'true');
+        track('video_control', { action: 'pause', label: 'hero_background_video' });
       }
     });
   }
 
-  // Respect prefers-reduced-motion
+  // REDUCED MOTION
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && video) {
     video.pause();
     if (pauseBtn) { pauseBtn.textContent = '▶ Play'; pauseBtn.setAttribute('aria-pressed', 'true'); }
+    track('reduced_motion', { action: 'auto_pause_video' });
   }
+
+  // CLOCK
   function tick() {
     const t = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York' }).format(new Date());
     document.getElementById('clock').textContent = t + ' EST NY';
@@ -851,6 +870,7 @@
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
     document.getElementById('themeLabel').textContent = isDark ? '[D]' : '[L]';
     themeBtn.setAttribute('aria-pressed', String(!isDark));
+    track('theme_toggle', { theme: isDark ? 'dark' : 'light' });
   });
 
   // CURSOR GLOW
@@ -867,14 +887,90 @@
   }, { threshold: 0.07 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // HERO ENTRANCE
+  // HERO ENTRANCE + ALL CLICK/SCROLL TRACKING ON LOAD
   window.addEventListener('load', () => {
+    // Hero entrance animation
     ['.hero-badge', '.hero-eyebrow', '.hero-headline', '.hero-sub'].forEach((sel, i) => {
       const el = document.querySelector(sel);
       if (!el) return;
       el.style.cssText = `opacity:0;transform:translateY(1.5rem);transition:opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${i*0.13}s,transform 0.9s cubic-bezier(0.22,1,0.36,1) ${i*0.13}s`;
       requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = ''; el.style.transform = ''; }));
     });
+
+    // VIBE CARD CLICKS
+    document.querySelectorAll('.vibe-card').forEach(card => {
+      card.addEventListener('click', () => {
+        track('vibe_card_click', {
+          project_name: card.querySelector('.vibe-name')?.textContent.trim(),
+          project_category: card.querySelector('.vibe-category')?.textContent.trim(),
+          destination_url: card.href
+        });
+      });
+    });
+
+    // CASE STUDY CLICKS
+    document.querySelectorAll('.case-item').forEach(item => {
+      item.addEventListener('click', () => {
+        track('case_study_click', {
+          project_name: item.querySelector('.case-name')?.textContent.trim(),
+          project_category: item.querySelector('.case-tag')?.textContent.trim(),
+          destination_url: item.href
+        });
+      });
+    });
+
+    // NAV CLICKS
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        track('nav_click', { label: link.textContent.trim() });
+      });
+    });
+
+    // CTA EMAIL
+    document.querySelector('.cta-email')?.addEventListener('click', () => {
+      track('cta_click', { label: 'email_cta', destination: 'jerlyn@designlady.com' });
+    });
+
+    // BLOG / THOUGHT LEADERSHIP CLICKS
+    document.querySelectorAll('.musing-item').forEach(item => {
+      item.addEventListener('click', () => {
+        track('blog_click', {
+          post_title: item.querySelector('.musing-title')?.textContent.trim(),
+          destination_url: item.href
+        });
+      });
+    });
+
+    // FOOTER LINK CLICKS
+    document.querySelectorAll('.footer-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        track('footer_click', { label: link.textContent.trim(), destination_url: link.href });
+      });
+    });
+
+    // SCROLL DEPTH — fires once at 25, 50, 75, 90%
+    const depths = [25, 50, 75, 90];
+    const fired = new Set();
+    window.addEventListener('scroll', () => {
+      const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+      depths.forEach(d => {
+        if (pct >= d && !fired.has(d)) {
+          fired.add(d);
+          track('scroll_depth', { depth_percent: d });
+        }
+      });
+    }, { passive: true });
+
+    // SECTION VISIBILITY — fires once per section when 30% in view
+    const sectionObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          track('section_view', { section_id: e.target.id || e.target.className.split(' ')[0] });
+          sectionObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('section[id], .marquee-wrap').forEach(s => sectionObs.observe(s));
   });
 </script>
 </body>
