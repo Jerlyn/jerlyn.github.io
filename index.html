@@ -344,7 +344,26 @@
   .footer-links a { transition: opacity 0.2s; }
   .footer-links a:hover { opacity: 0.5; }
 
-  /* REVEAL */
+  /* GLOBAL FOCUS INDICATOR
+     3px brand purple outline + 2px white halo for contrast against any background.
+     Uses :focus-visible so mouse users don't see rings; keyboard users always do.
+     Overrides on dark backgrounds handled via context-specific rules below. */
+  :focus-visible {
+    outline: 3px solid var(--purple);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px rgba(255,255,255,0.85);
+    border-radius: 2px;
+  }
+
+  /* On dark bg (hero, vibe cards, dark-mode nav) swap to teal so purple doesn't disappear */
+  .hero :focus-visible,
+  .vibe-card:focus-visible,
+  [data-theme="dark"] nav :focus-visible {
+    outline-color: #4ADEDE;
+    box-shadow: 0 0 0 5px rgba(2,12,40,0.9);
+  }
+
+  /* Pause button already has its own focus-visible — keep it */
   .reveal { opacity: 0; transform: translateY(1.75rem); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.08s; }
