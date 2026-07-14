@@ -387,11 +387,17 @@
     .nav-links { display: none; }
     .hero, .statement, .casestudies, .services, .vibecode, .musings, .cta-section { padding-left: 1.25rem; padding-right: 1.25rem; }
     .divider { margin: 0 1.25rem; }
-    footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; }
+    footer { padding: 1.5rem 1.25rem; flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+    .footer-links { flex-wrap: wrap; gap: 1rem 1.5rem; }
     .hero-sub { flex-direction: column; gap: 2rem; }
     .hero-tags { display: none; }
     .services-grid { grid-template-columns: 1fr; }
     .vibecode-grid { grid-template-columns: 1fr 1fr; }
+
+    /* CTA: clamp floor was 4rem (64px), too wide for ~335px text area.
+       Drop to 2.25rem floor so "Accessible." fits without overflow. */
+    .cta-word-stack { font-size: clamp(2.25rem, 11vw, 4rem); }
+    .cta-section { padding-top: 5rem; padding-bottom: 5rem; }
   }
   @media (max-width: 480px) {
     .vibecode-grid { grid-template-columns: 1fr; }
