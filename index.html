@@ -23,7 +23,7 @@
   :root {
     --bg: #020C28;
     --text: #FFFFFF;
-    --muted: rgba(255,255,255,0.4);
+    --muted: rgba(255,255,255,0.62); /* was 0.4 (~3.75:1 on #020C28, fails AA); now ~7.2:1 */
     --border: rgba(120,120,255,0.1);
     --pink: #DE6399;
     --teal: #4ADEDE;
@@ -202,7 +202,7 @@
     font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;
   }
   .statement-text .accent { color: var(--teal); }
-  .statement-text .dim { opacity: 0.12; }
+  .statement-text .dim { opacity: 0.5; } /* was 0.12 (~1.34:1, fails even the 3:1 large-text minimum); now ~5.3:1 */
 
   /* Light mode: dim words ("and", "Let's") swap to accessible gray — #545C6B = 5.8:1 on #F8F9FA */
   [data-theme="light"] .statement-text .dim,
@@ -333,7 +333,7 @@
     font-family: var(--display); font-size: clamp(4rem, 10vw, 12rem);
     font-weight: 800; line-height: 0.9; letter-spacing: -0.04em;
   }
-  .cta-word-stack .line-dim { opacity: 0.07; }
+  .cta-word-stack .line-dim { opacity: 0.5; } /* was 0.07 (~1.1:1, fails); now ~5.3:1 */
   .cta-word-stack .line-pink { color: var(--pink); }
   .cta-word-stack .line-teal { color: var(--teal); }
   .cta-contact { margin-top: 3rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
@@ -516,13 +516,13 @@
 </div>
 
 <!-- STATEMENT -->
-<div class="statement">
-  <p class="statement-text reveal" aria-label="I bring equity and craft to digital work.">
+<section class="statement" aria-label="Statement">
+  <p class="statement-text reveal">
     I bring <span class="accent">equity</span><br>
     <span class="dim">and</span> craft<br>
     to digital work.
   </p>
-</div>
+</section>
 
 <hr class="divider" aria-hidden="true">
 
@@ -633,9 +633,9 @@
   <p class="vibecode-intro reveal">
     Projects shipped in under a day. UX principles applied at speed. Each one is proof that accessibility and delight are not a trade-off.
   </p>
-  <div class="vibecode-grid" role="list">
+  <div class="vibecode-grid">
 
-    <a class="vibe-card reveal" href="https://jerlyn.github.io/vibecode/ChatGPTPie.html" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="ChatGPT Usage Visualization — view project">
+    <a class="vibe-card reveal" href="https://jerlyn.github.io/vibecode/ChatGPTPie.html" target="_blank" rel="noopener noreferrer" aria-label="ChatGPT Usage Visualization — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/newplot.png" alt="Pie chart of ChatGPT use cases" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -645,7 +645,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/vibecode/transcribe.html" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Natural Language Transcriber — view project">
+    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/vibecode/transcribe.html" target="_blank" rel="noopener noreferrer" aria-label="Natural Language Transcriber — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/transcribe.gif" alt="Real-time transcription demo" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -655,7 +655,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/vibecode/comeback.html" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Comeback Generator — view project">
+    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/vibecode/comeback.html" target="_blank" rel="noopener noreferrer" aria-label="Comeback Generator — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/comeback.gif" alt="Comeback Generator demo" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -665,7 +665,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/BadBoss/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Are You a Bad Boss — view project">
+    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/BadBoss/" target="_blank" rel="noopener noreferrer" aria-label="Are You a Bad Boss — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/BadBoss.gif" alt="Boss personality type animation" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -675,7 +675,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal" href="https://jerlyn.github.io/worldofai/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="AI with Charlie — view project">
+    <a class="vibe-card reveal" href="https://jerlyn.github.io/worldofai/" target="_blank" rel="noopener noreferrer" aria-label="AI with Charlie — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/charlie.png" alt="Charlie the AI guide character" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -685,7 +685,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/polymath/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="The Polymath Quiz — view project">
+    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/polymath/" target="_blank" rel="noopener noreferrer" aria-label="The Polymath Quiz — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/polymath.png" alt="Polymath Quiz interface" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -695,7 +695,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/first-letter-friends/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="First Letter Friends — view project">
+    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/first-letter-friends/" target="_blank" rel="noopener noreferrer" aria-label="First Letter Friends — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/friends.png" alt="First Letter Friends game" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -705,7 +705,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/memory-match-abc/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Memory Match ABC — view project">
+    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/memory-match-abc/" target="_blank" rel="noopener noreferrer" aria-label="Memory Match ABC — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/Memory.png" alt="Memory Match ABC game" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -715,7 +715,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal" href="https://jerlyn.github.io/ChatGPTDeYellower/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="ChatGPT DeYellower — view project">
+    <a class="vibe-card reveal" href="https://jerlyn.github.io/ChatGPTDeYellower/" target="_blank" rel="noopener noreferrer" aria-label="ChatGPT DeYellower — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/deyellow.png" alt="Before and after deyellowed image comparison" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -725,7 +725,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/Pacman/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Accessible Pac-Man — view project">
+    <a class="vibe-card reveal reveal-delay-1" href="https://jerlyn.github.io/Pacman/" target="_blank" rel="noopener noreferrer" aria-label="Accessible Pac-Man — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/Pacman.gif" alt="Pac-Man game" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -735,7 +735,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/vaccine-wordle/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="Vaccine Wordle — view project">
+    <a class="vibe-card reveal reveal-delay-2" href="https://jerlyn.github.io/vaccine-wordle/" target="_blank" rel="noopener noreferrer" aria-label="Vaccine Wordle — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/Worldle.png" alt="Vaccine Wordle game" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
@@ -745,7 +745,7 @@
       </div>
     </a>
 
-    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/GenAITetris/" target="_blank" rel="noopener noreferrer" role="listitem" aria-label="GenAI Tetris — view project">
+    <a class="vibe-card reveal reveal-delay-3" href="https://jerlyn.github.io/GenAITetris/" target="_blank" rel="noopener noreferrer" aria-label="GenAI Tetris — view project">
       <img class="vibe-thumb" src="https://jerlyn.github.io/vibecode/tetris.png" alt="Retro Tetris game" loading="lazy">
       <div class="vibe-overlay" aria-hidden="true"><span class="vibe-overlay-label">View →</span></div>
       <div class="vibe-info">
