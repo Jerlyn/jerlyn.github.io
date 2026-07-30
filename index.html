@@ -127,9 +127,9 @@
 
   /* Hero sits over a dark colored overlay at all times — white text regardless of theme */
   .hero { color: #FFFFFF; }
-  .hero .hero-eyebrow { color: rgba(255,255,255,0.55); }
-  .hero .hero-bio { color: rgba(255,255,255,0.68); }
-  .hero .hero-tags { color: rgba(255,255,255,0.38); }
+  .hero .hero-eyebrow { color: #C7D2E6; } /* was rgba(255,255,255,0.55); ~8.4:1 vs. worst-case hero bg */
+  .hero .hero-bio { color: #F5F7FB; } /* was rgba(255,255,255,0.68); ~11.9:1 */
+  .hero .hero-tags { color: #C7D2E6; } /* was rgba(255,255,255,0.38) (~3.4:1, failed AA); now ~8.4:1 */
   .hero .hero-badge { color: #4ADEDE; border-color: rgba(74,222,222,0.4); }
   .hero .hero-badge-dot { background: #4ADEDE; }
   .hero .hero-bio strong { color: #4ADEDE; }
