@@ -126,13 +126,13 @@
   .hero > *:not(.hero-video-wrap):not(.video-pause-btn) { position: relative; z-index: 1; }
 
   /* Hero sits over a dark colored overlay at all times — white text regardless of theme */
-  .hero { color: #FFFFFF; }
-  .hero .hero-eyebrow { color: #C7D2E6; } /* was rgba(255,255,255,0.55); ~8.4:1 vs. worst-case hero bg */
-  .hero .hero-bio { color: #F5F7FB; } /* was rgba(255,255,255,0.68); ~11.9:1 */
-  .hero .hero-tags { color: #C7D2E6; } /* was rgba(255,255,255,0.38) (~3.4:1, failed AA); now ~8.4:1 */
-  .hero .hero-badge { color: #4ADEDE; border-color: rgba(74,222,222,0.4); }
-  .hero .hero-badge-dot { background: #4ADEDE; }
-  .hero .hero-bio strong { color: #4ADEDE; }
+  .hero { color: #F5F7FB; } /* was #FFFFFF; ~11.9:1 vs. worst-case hero bg */
+  .hero .hero-eyebrow { color: #DDE6F4; } /* was #C7D2E6; ~10.2:1 */
+  .hero .hero-bio { color: #DDE6F4; } /* was #F5F7FB; ~10.2:1 */
+  .hero .hero-tags { color: #DDE6F4; } /* was #C7D2E6; ~10.2:1 */
+  .hero .hero-badge { color: #A7C7FF; border-color: rgba(167,199,255,0.4); } /* was #4ADEDE / rgba(74,222,222,0.4); ~7.5:1, hero-scoped only */
+  .hero .hero-badge-dot { background: #A7C7FF; } /* was #4ADEDE */
+  .hero .hero-bio strong { color: #A7C7FF; font-weight: 500; } /* was #4ADEDE */
 
   .video-pause-btn {
     position: absolute; bottom: 1.5rem; right: 2.5rem; z-index: 2;
